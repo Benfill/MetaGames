@@ -82,5 +82,5 @@ The application uses H2 as an in-memory database, so no additional database conf
 
 ## Author and Contact
 **Author**: Anass Benfillous  
-**Contact**: benfianass@gmail.com 
+**Contact**: benfianass@gmail.com
 LinkedIn: [LinkedIn Profile](https://www.linkedin.com/in/benfill)
