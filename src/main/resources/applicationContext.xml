@@ -1,15 +1,75 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
-       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-       xsi:schemaLocation="http://www.springframework.org/schema/beans
-           http://www.springframework.org/schema/beans/spring-beans.xsd">
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:tx="http://www.springframework.org/schema/tx"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+           http://www.springframework.org/schema/beans/spring-beans.xsd
+           http://www.springframework.org/schema/context
+           http://www.springframework.org/schema/context/spring-context.xsd
+           http://www.springframework.org/schema/tx
+           http://www.springframework.org/schema/tx/spring-tx.xsd">
 
-    <!-- Bean Definition -->
-    <bean id="myBean" class="com.example.MyClass">
-        <!-- Inject dependencies -->
-        <property name="myDependency" ref="myDependencyBean"/>
-    </bean>
+	<bean id="dataSource"
+		class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+		<property name="driverClassName" value="org.h2.Driver" />
+		<property name="url"
+			value="jdbc:h2:file:./data/meta_games;DB_CLOSE_DELAY=-1;AUTO_SERVER=TRUE" />
+		<property name="username" value="sa" />
+		<property name="password" value="" />
+	</bean>
 
-    <bean id="myDependencyBean" class="com.example.MyDependencyClass"/>
-    
+	<bean id="sessionFactory"
+		class="org.springframework.orm.hibernate5.LocalSessionFactoryBean">
+		<property name="dataSource" ref="dataSource" />
+		<property name="packagesToScan"
+			value="io.github.benfill.metagames.model" />
+
+		<property name="hibernateProperties">
+			<props>
+				<prop key="hibernate.dialect">org.hibernate.dialect.H2Dialect</prop>
+				<prop key="hibernate.hbm2ddl.auto">update</prop>
+				<prop key="hibernate.show_sql">true</prop>
+			</props>
+		</property>
+	</bean>
+
+	<bean id="transactionManager"
+		class="org.springframework.orm.hibernate5.HibernateTransactionManager">
+		<property name="sessionFactory" ref="sessionFactory" />
+	</bean>
+
+	<tx:annotation-driven
+		transaction-manager="transactionManager" />
+
+
+
+
+	<bean id="h2WebServer" class="org.h2.tools.Server"
+		factory-method="createWebServer" init-method="start"
+		destroy-method="stop">
+		<constructor-arg
+			value="-web,-webAllowOthers,-webPort,8083" />
+	</bean>
+
+	<!-- Bean for PlayerDao -->
+	<bean id="playerDao" class="dao.impl.PlayerDaoImpl" />
+
+	<!-- Bean for PlayerService with constructor injection -->
+	<bean id="playerService"
+		class="service.impl.PlayerServiceImpl">
+		<constructor-arg ref="playerDao" />
+	</bean>
+
+	<!-- Bean for PlayerController with constructor injection -->
+	<bean id="playerController"
+		class="controller.PlayerController">
+		<constructor-arg ref="playerService" />
+	</bean>
+
+	<!-- Bean for App class with constructor injection -->
+	<bean id="app" class="controller.App">
+		<constructor-arg ref="playerController" />
+	</bean>
+
 </beans>
