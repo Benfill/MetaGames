@@ -26,14 +26,20 @@ public class TeamView {
 	}
 
 	public static void displayTeamInfo(Team team) {
-		Console.displayMessage("Team Details:\n" + "ID: " + team.getId() + "\nName: " + team.getName());
+		Console.displayMessage(
+				"Team Details:\n" + "ID: " + team.getId() + "\nName: " + team.getName() + "\nTeam Players:\n");
+		if (team.getPlayers() == null)
+			Console.displayMessage("List is empty");
+		team.getPlayers().forEach(player -> {
+			PlayerView.displayPlayerInfo(player);
+		});
 	}
 
 	public static void displayAllTeams(List<Team> teams) {
 		StringBuilder builder = new StringBuilder("List of All Teams:\n");
-		for (Team team : teams) {
+		teams.forEach(team -> {
 			builder.append("ID: ").append(team.getId()).append(", Name: ").append(team.getName()).append("\n");
-		}
+		});
 		Console.displayMessage(!teams.isEmpty() ? builder.toString() : "List is empty");
 	}
 }

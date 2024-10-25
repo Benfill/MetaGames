@@ -31,20 +31,20 @@ public class TeamController {
 				break;
 
 			case 1:
-				choice = store();
-				break;
+				store();
+				return 0;
 
 			case 2:
-				choice = update();
-				break;
+				update();
+				return 0;
 
 			case 3:
 				choice = delete();
 				break;
 
 			case 4:
-				choice = addRemovePlayer();
-				break;
+				addRemovePlayer();
+				return 0;
 
 			case 5:
 				choice = show();
@@ -68,12 +68,10 @@ public class TeamController {
 		return 7;
 	}
 
-	private int store() {
+	private void store() {
 		String name = Console.getInput("Enter team name: ");
 		teamService.createTeam(name);
 		Console.displayMessage("Team created successfully");
-		Console.getInput("Enter anything to Return: ");
-		return 7;
 	}
 
 	private int show() {
@@ -97,7 +95,7 @@ public class TeamController {
 		return 7;
 	}
 
-	private int update() {
+	private void update() {
 		List<Team> teams = teamService.getALl();
 		if (teams.isEmpty())
 			Console.displayMessage("there is no team to update");
@@ -105,7 +103,7 @@ public class TeamController {
 			TeamView.displayAllTeams(teams);
 			long id = TeamView.getTeamId();
 
-			String name = Console.getOptionalInput("Enter new team name: ");
+			String name = Console.getOptionalInput("Enter new team name ");
 			try {
 				teamService.updateTeam(id, name);
 				Console.displayMessage("Team updated successfully");
@@ -114,8 +112,6 @@ public class TeamController {
 			}
 
 		}
-		Console.getInput("Enter anything to Return: ");
-		return 7;
 	}
 
 	private int delete() {
@@ -139,7 +135,7 @@ public class TeamController {
 		return 7;
 	}
 
-	private int addRemovePlayer() {
+	private void addRemovePlayer() {
 		List<Team> teams = teamService.getALl();
 		List<Player> players = playerService.getALl();
 
@@ -161,8 +157,5 @@ public class TeamController {
 				}
 			}
 		}
-
-		Console.getInput("Enter anything to Return: ");
-		return 7;
 	}
 }
