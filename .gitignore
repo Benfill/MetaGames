@@ -1,3 +1,1 @@
-/target/
-src/main/resources/data/meta_games.mv.db
-src/main/resources/data/meta_games.lock.db
+src/main/resources/data
