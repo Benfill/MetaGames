@@ -4,7 +4,7 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 public class SpringContextUtil {
-	private static ApplicationContext context;
+	public static ApplicationContext context;
 
 	// Static block to initialize the context when the class is loaded
 	static {
