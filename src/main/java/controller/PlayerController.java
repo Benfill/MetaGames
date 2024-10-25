@@ -5,18 +5,14 @@ import java.util.List;
 import console.Console;
 import console.PlayerView;
 import model.Player;
-import service.impl.PlayerServiceImpl;
+import service.IPlayerService;
 
 public class PlayerController {
 	private int choice;
 
-	private PlayerServiceImpl playerService;
+	private IPlayerService playerService;
 
-	public PlayerController() {
-
-	}
-
-	public PlayerController(PlayerServiceImpl service) {
+	public PlayerController(IPlayerService service) {
 		this.playerService = service;
 	}
 
@@ -34,8 +30,8 @@ public class PlayerController {
 				break;
 
 			case 2:
-				choice = update();
-				break;
+				update();
+				return 0;
 
 			case 3:
 				choice = delete();
@@ -64,21 +60,52 @@ public class PlayerController {
 	}
 
 	private int store() {
+		String pseudo = Console.getInput("Enter player pseudo: ");
+		int age = Console.getValidIntInput("Enter player age: ", "Enter a valid number");
+		playerService.registerPlayer(pseudo, age);
+		Console.displayMessage("Player created successfully");
 		Console.getInput("Enter anything to Return: ");
 		return 6;
 	}
 
 	private int show() {
+		long id = PlayerView.getPlayerId();
+		try {
+			Player player = playerService.getPlayerById(id);
+			PlayerView.displayPlayerInfo(player);
+		} catch (Exception e) {
+			Console.displayMessage(e.getMessage());
+		}
 		Console.getInput("Enter anything to Return: ");
 		return 6;
 	}
 
-	private int update() {
-		Console.getInput("Enter anything to Return: ");
-		return 6;
+	private void update() {
+		List<Player> players = playerService.getALl();
+		PlayerView.displayAllPlayers(players);
+		long id = PlayerView.getPlayerId();
+
+		String pseudo = Console.getOptionalInput("Enter new player pseudo");
+		int age = Console.getOptionalIntInput("Enter new age");
+
+		try {
+			playerService.updatePlayer(id, pseudo, age);
+			Console.displayMessage("Player updated successfully");
+		} catch (Exception e) {
+			Console.displayMessage(e.getMessage());
+		}
 	}
 
 	private int delete() {
+		List<Player> players = playerService.getALl();
+		PlayerView.displayAllPlayers(players);
+		long id = PlayerView.getPlayerId();
+		try {
+			playerService.deletePlayer(id);
+			Console.displayMessage("Player deleted successfully");
+		} catch (Exception e) {
+			Console.displayMessage(e.getMessage());
+		}
 		Console.getInput("Enter anything to Return: ");
 		return 6;
 	}
