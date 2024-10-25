@@ -2,14 +2,15 @@ package service.impl;
 
 import java.util.List;
 
+import org.springframework.transaction.annotation.Transactional;
+
 import dao.IPlayerDao;
 import model.Player;
-import model.Team;
 import service.IPlayerService;
 
 public class PlayerServiceImpl implements IPlayerService {
 
-	IPlayerDao playerDao;
+	private IPlayerDao playerDao;
 
 	public PlayerServiceImpl(IPlayerDao playerDao) {
 		this.playerDao = playerDao;
@@ -25,21 +26,24 @@ public class PlayerServiceImpl implements IPlayerService {
 		return playerDao.readById(id);
 	}
 
+	@Transactional
 	@Override
-	public void registerPlayer(String pseudo, int age, Team team) {
-		Player player = new Player(pseudo, age, team);
+	public void registerPlayer(String pseudo, int age) {
+		Player player = new Player(pseudo, age);
 
 		playerDao.insert(player);
 	}
 
+	@Transactional
 	@Override
-	public void updatePlayer(long id, String pseudo, int age, Team team) throws Exception {
-		Player player = new Player(id, pseudo, age, team);
+	public void updatePlayer(long id, String pseudo, int age) throws Exception {
+		Player player = new Player(id, pseudo, age);
 
 		playerDao.update(player);
 
 	}
 
+	@Transactional
 	@Override
 	public void deletePlayer(long id) throws Exception {
 		playerDao.delete(id);

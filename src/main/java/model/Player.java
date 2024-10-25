@@ -29,17 +29,15 @@ public class Player {
 	public Player() {
 	}
 
-	public Player(long id, String pseudo, int age, Team team) {
+	public Player(long id, String pseudo, int age) {
 		this.id = id;
 		this.pseudo = pseudo;
 		this.age = age;
-		this.team = team;
 	}
 
-	public Player(String pseudo, int age, Team team) {
+	public Player(String pseudo, int age) {
 		this.pseudo = pseudo;
 		this.age = age;
-		this.team = team;
 	}
 
 	public long getId() {

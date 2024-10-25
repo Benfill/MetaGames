@@ -3,28 +3,36 @@ package dao.impl;
 import java.util.List;
 
 import org.hibernate.Session;
-import org.hibernate.Transaction;
+import org.hibernate.SessionFactory;
 import org.hibernate.query.Query;
 
 import dao.IPlayerDao;
 import model.Player;
-import util.HibernateUtil;
 
 public class PlayerDaoImpl implements IPlayerDao {
 
+	private SessionFactory sessionFactory;
+
+	public void setSessionFactory(SessionFactory sessionFactory) {
+		this.sessionFactory = sessionFactory;
+	}
+
+	protected Session getCurrentSession() {
+		return sessionFactory.getCurrentSession();
+	}
+
 	@Override
 	public List<Player> readAll() {
-		Session session = HibernateUtil.getSession();
+		Session session = getCurrentSession();
 		Query<Player> query = session.createQuery("FROM Player", Player.class);
 		List<Player> players = query.getResultList();
-		session.close();
 		return players;
 
 	}
 
 	@Override
 	public Player readById(long id) throws Exception {
-		Session session = HibernateUtil.getSession();
+		Session session = getCurrentSession();
 		Player player = session.get(Player.class, id);
 		if (player == null)
 			throw new Exception("Player not found");
@@ -33,71 +41,28 @@ public class PlayerDaoImpl implements IPlayerDao {
 
 	@Override
 	public void insert(Player player) {
-		Transaction transaction = null;
-
-		Session session = HibernateUtil.getSession();
-
-		try {
-			transaction = session.beginTransaction();
-			session.save(player);
-			transaction.commit();
-		} catch (Exception e) {
-			if (transaction != null) {
-				transaction.rollback(); // Rollback in case of an error
-			}
-			e.printStackTrace();
-		} finally {
-			session.close(); // Always close the session
-		}
-
+		Session session = getCurrentSession();
+		session.save(player);
 	}
 
 	@Override
 	public void update(Player player) throws Exception {
 		Player oldPlayer = readById(player.getId());
-		Transaction transaction = null;
 
-		Session session = HibernateUtil.getSession();
+		Session session = getCurrentSession();
 
-		oldPlayer.setPseudo(player.getPseudo());
-		oldPlayer.setAge(player.getAge());
-		oldPlayer.setTeam(player.getTeam());
-
-		try {
-			transaction = session.beginTransaction();
-			session.update(oldPlayer);
-			transaction.commit();
-		} catch (Exception e) {
-			if (transaction != null) {
-				transaction.rollback(); // Rollback in case of an error
-			}
-			e.printStackTrace();
-		} finally {
-			session.close(); // Always close the session
-		}
+		oldPlayer.setPseudo(player.getPseudo() != null ? player.getPseudo() : oldPlayer.getPseudo());
+		oldPlayer.setAge(player.getAge() != 0 ? player.getAge() : oldPlayer.getAge());
+		session.update(oldPlayer);
 
 	}
 
 	@Override
 	public void delete(long id) throws Exception {
 		Player player = readById(id);
-		Transaction transaction = null;
 
-		Session session = HibernateUtil.getSession();
-
-		try {
-			transaction = session.beginTransaction();
-			session.delete(player);
-			transaction.commit();
-		} catch (Exception e) {
-			if (transaction != null) {
-				transaction.rollback(); // Rollback in case of an error
-			}
-			e.printStackTrace();
-		} finally {
-			session.close(); // Always close the session
-		}
-
+		Session session = getCurrentSession();
+		session.delete(player);
 	}
 
 }

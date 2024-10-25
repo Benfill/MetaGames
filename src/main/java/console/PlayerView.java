@@ -14,7 +14,7 @@ public class PlayerView {
 	}
 
 	public static int getPlayerId() {
-		return Console.getValidIntInput("Enter player ID: ");
+		return Console.getValidIntInput("Enter player ID: ", "Enter a valid number: ");
 	}
 
 	public static void displayPlayerInfo(Player player) {
@@ -25,9 +25,9 @@ public class PlayerView {
 	public static void displayAllPlayers(List<Player> players) {
 		StringBuilder builder = new StringBuilder("List of All Players:\n");
 		players.forEach(player -> {
+			String teamName = player.getTeam() != null ? player.getTeam().getName() : "none";
 			builder.append("ID: ").append(player.getId()).append(", Name: ").append(player.getPseudo())
-					.append(", Age: ").append(player.getAge()).append(", Team: ").append(player.getTeam().getName())
-					.append("\n");
+					.append(", Age: ").append(player.getAge()).append(", Team: ").append(teamName).append("\n");
 		});
 		Console.displayMessage(!players.isEmpty() ? builder.toString() : "List is empty");
 	}

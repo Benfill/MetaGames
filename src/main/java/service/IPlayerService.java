@@ -3,7 +3,6 @@ package service;
 import java.util.List;
 
 import model.Player;
-import model.Team;
 
 public interface IPlayerService {
 
@@ -11,9 +10,9 @@ public interface IPlayerService {
 
 	Player getPlayerById(long id) throws Exception;
 
-	void registerPlayer(String pseudo, int age, Team team);
+	void registerPlayer(String pseudo, int age);
 
-	void updatePlayer(long id, String pseudo, int age, Team team) throws Exception;
+	void updatePlayer(long id, String pseudo, int age) throws Exception;
 
 	void deletePlayer(long id) throws Exception;
 }
