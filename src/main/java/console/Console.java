@@ -55,6 +55,11 @@ public class Console {
 	}
 
 	public static String getOptionalInput(String prompt) {
+		// Consume any leftover newline from previous input
+		if (scanner.hasNextLine()) {
+			scanner.nextLine();
+		}
+
 		System.out.print(prompt + " (press Enter to skip): ");
 		String input = scanner.nextLine(); // Directly read input without checking for leftovers
 		return input.isEmpty() ? null : input; // Returns null if the input is empty

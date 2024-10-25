@@ -1,4 +1,1 @@
-/target/
-data/meta_games.trace.db
-data/meta_games.lock.db
-/data
+src/main/resources/data
