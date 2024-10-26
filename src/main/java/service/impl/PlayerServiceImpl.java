@@ -19,7 +19,7 @@ public class PlayerServiceImpl implements IPlayerService {
 	}
 
 	@Override
-	public List<Player> getALl() {
+	public List<Player> getAll() {
 		return playerDao.readAll();
 	}
 

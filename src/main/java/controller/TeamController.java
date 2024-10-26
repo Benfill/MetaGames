@@ -141,7 +141,7 @@ public class TeamController {
 
 	private void addRemovePlayer() {
 		List<Team> teams = teamService.getAll();
-		List<Player> players = playerService.getALl();
+		List<Player> players = playerService.getAll();
 
 		if (teams.isEmpty())
 			Console.displayMessage("there is no team to update");
