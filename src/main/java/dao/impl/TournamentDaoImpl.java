@@ -51,6 +51,20 @@ public class TournamentDaoImpl implements ITournamentDao {
 	public void update(Tournament tournament) throws Exception {
 		Tournament oldTournament = readById(tournament.getId());
 
+		oldTournament.setGame(tournament.getGame());
+		oldTournament.setName(tournament.getName() != null ? tournament.getName() : oldTournament.getName());
+		oldTournament.setStartDate(
+				tournament.getStartDate() != null ? tournament.getStartDate() : oldTournament.getStartDate());
+		oldTournament
+				.setEndDate(tournament.getEndDate() != null ? tournament.getEndDate() : oldTournament.getEndDate());
+		oldTournament.setSpectatorCount(tournament.getSpectatorCount() != 0 ? tournament.getSpectatorCount()
+				: oldTournament.getSpectatorCount());
+		oldTournament.setBreakTime(
+				tournament.getBreakTime() != 0 ? tournament.getBreakTime() : oldTournament.getBreakTime());
+		oldTournament.setCeremonyTime(
+				tournament.getCeremonyTime() != 0 ? tournament.getCeremonyTime() : oldTournament.getCeremonyTime());
+		oldTournament.setStatus(tournament.getStatus());
+
 		Session session = getCurrentSession();
 		session.update(oldTournament);
 	}

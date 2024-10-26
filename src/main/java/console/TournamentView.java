@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Scanner;
 
 import enums.TournamentStatus;
+import model.Team;
 import model.Tournament;
 
 public class TournamentView {
@@ -21,8 +22,17 @@ public class TournamentView {
 	}
 
 	public static void displayTournamentInfo(Tournament tournament) {
-		Console.displayMessage(
-				"Tournament Details:\n" + "ID: " + tournament.getId() + "\nName: " + tournament.getName());
+		Console.displayMessage("Tournament Details:\n" + "ID: " + tournament.getId() + "\n" + "Name: "
+				+ tournament.getName() + "\n" + "Game: " + tournament.getGame().getName() + "\n" + "Start Date: "
+				+ tournament.getStartDate() + "\n" + "End Date: " + tournament.getEndDate() + "\n" + "Spectator Count: "
+				+ tournament.getSpectatorCount() + "\n" + "Break Time: " + tournament.getBreakTime() + " minutes\n"
+				+ "Ceremony Time: " + tournament.getCeremonyTime() + " minutes\n" + "Status: " + tournament.getStatus()
+				+ "\n" + "Teams: " + getTeamNames(tournament.getTeams()));
+	}
+
+	private static String getTeamNames(List<Team> teams) {
+		return teams.stream().map(Team::getName).reduce((team1, team2) -> team1 + ", " + team2)
+				.orElse("No teams registered");
 	}
 
 	public static void displayAllTournaments(List<Tournament> tournaments) {

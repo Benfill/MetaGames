@@ -90,7 +90,8 @@ public class TournamentController {
 		long id = TournamentView.getTournamentId();
 
 		try {
-			tournamentService.getTournamentById(id);
+			Tournament tournament = tournamentService.getTournamentById(id);
+			TournamentView.displayTournamentInfo(tournament);
 		} catch (Exception e) {
 			Console.displayMessage(e.getMessage());
 		}
