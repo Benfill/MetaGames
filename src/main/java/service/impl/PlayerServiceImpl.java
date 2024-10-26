@@ -13,6 +13,8 @@ public class PlayerServiceImpl implements IPlayerService {
 	private IPlayerDao playerDao;
 
 	public PlayerServiceImpl(IPlayerDao playerDao) {
+		if (playerDao == null)
+			throw new IllegalStateException("PlayerDao must not be null");
 		this.playerDao = playerDao;
 	}
 

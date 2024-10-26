@@ -13,6 +13,8 @@ public class PlayerController {
 	private IPlayerService playerService;
 
 	public PlayerController(IPlayerService service) {
+		if (service == null)
+			throw new IllegalStateException("PlayerService must not be null");
 		this.playerService = service;
 	}
 

@@ -30,6 +30,16 @@ public class Game {
 	@OneToMany(mappedBy = "game", cascade = CascadeType.ALL, orphanRemoval = true)
 	private List<Tournament> tournament;
 
+	public Game(String name, double difficulty, double averageMatchDuration) {
+		this.name = name;
+		this.difficulty = difficulty;
+		this.averageMatchDuration = averageMatchDuration;
+	}
+
+	public Game() {
+
+	}
+
 	public List<Tournament> getTournament() {
 		return tournament;
 	}

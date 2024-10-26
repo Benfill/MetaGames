@@ -78,6 +78,15 @@
         <property name="sessionFactory" ref="sessionFactory" />
         <constructor-arg ref="playerDao" />
     </bean>
+    
+    <bean id="gameDao" class="dao.impl.GameDaoImpl">
+        <property name="sessionFactory" ref="sessionFactory" />
+    </bean>
+    
+    <bean id="tournamentDao" class="dao.impl.TournamentDaoExtension">
+        <property name="sessionFactory" ref="sessionFactory" />
+        <constructor-arg ref="teamDao" />
+    </bean>
 
     <!-- Services -->
     <bean id="playerService" class="service.impl.PlayerServiceImpl">
@@ -86,6 +95,11 @@
 
     <bean id="teamService" class="service.impl.TeamServiceImpl">
         <constructor-arg ref="teamDao" />
+    </bean>
+    
+     <bean id="tournamentService" class="service.impl.TournamentServiceImpl">
+        <constructor-arg ref="tournamentDao" />
+        <constructor-arg ref="gameDao" />
     </bean>
 
     <!-- Controllers -->
@@ -97,11 +111,17 @@
         <constructor-arg ref="teamService" />
         <constructor-arg ref="playerService" />
     </bean>
+    
+    <bean id="tournamentController" class="controller.TournamentController">
+        <constructor-arg ref="tournamentService" />
+        <constructor-arg ref="teamService" />
+    </bean>
 
     <!-- App -->
     <bean id="app" class="controller.App" init-method="init">
         <constructor-arg ref="playerController" />
         <constructor-arg ref="teamController" />
+        <constructor-arg ref="tournamentController" />
     </bean>
 
 </beans>

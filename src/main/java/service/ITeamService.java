@@ -6,7 +6,7 @@ import model.Team;
 
 public interface ITeamService {
 
-	List<Team> getALl();
+	List<Team> getAll();
 
 	Team getTeamById(long id) throws Exception;
 

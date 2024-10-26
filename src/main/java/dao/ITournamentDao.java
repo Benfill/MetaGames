@@ -14,9 +14,9 @@ public interface ITournamentDao {
 
 	void update(Tournament tournament) throws Exception;
 
-	void delete(long id);
+	void delete(long id) throws Exception;
 
-	void addOrRemoveTeam(long TournamentId, long teamId);
+	void addOrRemoveTeam(long TournamentId, long teamId) throws Exception;
 
 	double calculateEstimatedDuration(Tournament tournament);
 }

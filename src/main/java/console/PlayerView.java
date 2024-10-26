@@ -18,8 +18,9 @@ public class PlayerView {
 	}
 
 	public static void displayPlayerInfo(Player player) {
+		String teamName = player.getTeam() != null ? player.getTeam().getName() : "none";
 		Console.displayMessage("Player Details:\n" + "ID: " + player.getId() + "\nPseudo: " + player.getPseudo()
-				+ "\nAge: " + player.getAge() + "\nTeam: " + player.getTeam().getName());
+				+ "\nAge: " + player.getAge() + "\nTeam: " + teamName);
 	}
 
 	public static void displayAllPlayers(List<Player> players) {
