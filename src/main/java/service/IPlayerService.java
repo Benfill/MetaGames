@@ -6,7 +6,7 @@ import model.Player;
 
 public interface IPlayerService {
 
-	List<Player> getALl();
+	List<Player> getAll();
 
 	Player getPlayerById(long id) throws Exception;
 

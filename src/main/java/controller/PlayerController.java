@@ -55,7 +55,7 @@ public class PlayerController {
 	}
 
 	private int index() {
-		List<Player> players = playerService.getALl();
+		List<Player> players = playerService.getAll();
 		PlayerView.displayAllPlayers(players);
 		Console.getInput("Enter anything to Return: ");
 		return 6;
@@ -83,7 +83,7 @@ public class PlayerController {
 	}
 
 	private void update() {
-		List<Player> players = playerService.getALl();
+		List<Player> players = playerService.getAll();
 		PlayerView.displayAllPlayers(players);
 		long id = PlayerView.getPlayerId();
 
@@ -99,7 +99,7 @@ public class PlayerController {
 	}
 
 	private int delete() {
-		List<Player> players = playerService.getALl();
+		List<Player> players = playerService.getAll();
 		PlayerView.displayAllPlayers(players);
 		long id = PlayerView.getPlayerId();
 		try {
