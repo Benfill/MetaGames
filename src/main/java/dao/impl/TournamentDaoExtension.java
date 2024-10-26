@@ -1,10 +1,11 @@
 package dao.impl;
 
+import dao.ITeamDao;
 import model.Tournament;
 
 public class TournamentDaoExtension extends TournamentDaoImpl {
 
-	public TournamentDaoExtension(TeamDaoImpl teamDaoImpl) {
+	public TournamentDaoExtension(ITeamDao teamDaoImpl) {
 		super(teamDaoImpl);
 	}
 
@@ -16,5 +17,6 @@ public class TournamentDaoExtension extends TournamentDaoImpl {
 		double difficulty = tournament.getGame().getDifficulty();
 		double ceremonyTime = tournament.getCeremonyTime();
 		return (teamCount * averageMatchDuration * difficulty) + breakTime + ceremonyTime;
+
 	}
 }

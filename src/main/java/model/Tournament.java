@@ -17,7 +17,7 @@ import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
-import enums.TounamentStatus;
+import enums.TournamentStatus;
 
 @Entity
 @Table(name = "tournaments")
@@ -61,7 +61,37 @@ public class Tournament {
 
 	@Enumerated(EnumType.STRING)
 	@Column(nullable = false)
-	private TounamentStatus status;
+	private TournamentStatus status;
+
+	public Tournament(String name, Game game, LocalDateTime start, LocalDateTime end, int spectator, double breakTime,
+			double ceremoneyTime, TournamentStatus status, List<Team> teams) {
+		this.name = name;
+		this.game = game;
+		this.startDate = start;
+		this.endDate = end;
+		this.spectatorCount = spectator;
+		this.breakTime = breakTime;
+		this.ceremonyTime = ceremoneyTime;
+		this.status = status;
+		this.teams = teams;
+	}
+
+	public Tournament(long id, String name, Game game, LocalDateTime start, LocalDateTime end, int spectator,
+			double breakTime, double ceremoneyTime, TournamentStatus status) {
+		this.id = id;
+		this.name = name;
+		this.game = game;
+		this.startDate = start;
+		this.endDate = end;
+		this.spectatorCount = spectator;
+		this.breakTime = breakTime;
+		this.ceremonyTime = ceremoneyTime;
+		this.status = status;
+	}
+
+	public Tournament() {
+		// TODO Auto-generated constructor stub
+	}
 
 	public long getId() {
 		return id;
@@ -143,11 +173,11 @@ public class Tournament {
 		this.ceremonyTime = ceremonyTime;
 	}
 
-	public TounamentStatus getStatus() {
+	public TournamentStatus getStatus() {
 		return status;
 	}
 
-	public void setStatus(TounamentStatus status) {
+	public void setStatus(TournamentStatus status) {
 		this.status = status;
 	}
 

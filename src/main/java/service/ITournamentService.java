@@ -2,18 +2,25 @@ package service;
 
 import java.util.List;
 
-import model.Team;
+import model.Game;
+import model.Tournament;
 
 public interface ITournamentService {
-	List<Team> getALl();
+	List<Tournament> getAll();
 
-	Team getTournamentById(long id) throws Exception;
+	Tournament getTournamentById(long id) throws Exception;
 
-	void createTournament(String name);
+	void createTournament(Tournament tournament);
 
-	void updateTournament(long id, String name) throws Exception;
+	void updateTournament(Tournament tournament) throws Exception;
 
 	void deleteTournament(long id) throws Exception;
 
 	void addOrRemoveTeam(long tournamentId, long teamId) throws Exception;
+
+	List<Game> getGames();
+
+	Game getGameById(long id) throws Exception;
+
+	void createGame(Game game);
 }

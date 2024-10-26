@@ -1,5 +1,5 @@
 package enums;
 
-public enum TounamentStatus {
+public enum TournamentStatus {
 	PLANNED, INPROGRESS, COMPLETED, CANCELLED
 }

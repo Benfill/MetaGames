@@ -13,11 +13,13 @@ public class TeamServiceImpl implements ITeamService {
 	private ITeamDao teamDao;
 
 	public TeamServiceImpl(ITeamDao teamDaoImpl) {
+		if (teamDaoImpl == null)
+			throw new IllegalStateException("TeamDao must not be null");
 		this.teamDao = teamDaoImpl;
 	}
 
 	@Override
-	public List<Team> getALl() {
+	public List<Team> getAll() {
 		return teamDao.readAll();
 	}
 

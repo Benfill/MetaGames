@@ -1,23 +1,24 @@
 package dao.impl;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
-import org.hibernate.Transaction;
 import org.hibernate.query.Query;
 
+import dao.ITeamDao;
 import dao.ITournamentDao;
 import model.Team;
 import model.Tournament;
 
 public class TournamentDaoImpl implements ITournamentDao {
 
-	private TeamDaoImpl teamDao;
+	private ITeamDao teamDao;
 
 	private SessionFactory sessionFactory;
 
-	public TournamentDaoImpl(TeamDaoImpl teamDaoImpl) {
+	public TournamentDaoImpl(ITeamDao teamDaoImpl) {
 		this.teamDao = teamDaoImpl;
 	}
 
@@ -26,7 +27,6 @@ public class TournamentDaoImpl implements ITournamentDao {
 		Session session = getCurrentSession();
 		Query<Tournament> query = session.createQuery("FROM Tournament", Tournament.class);
 		List<Tournament> tournament = query.getResultList();
-		session.close();
 		return tournament;
 	}
 
@@ -36,102 +36,49 @@ public class TournamentDaoImpl implements ITournamentDao {
 		Tournament tournament = session.get(Tournament.class, id);
 		if (tournament == null)
 			throw new Exception("Tournament not found");
-		session.close();
 		return tournament;
 
 	}
 
 	@Override
 	public void insert(Tournament tournament) {
-		Transaction transaction = null;
-
 		Session session = getCurrentSession();
-
-		try {
-			transaction = session.beginTransaction();
-			session.save(tournament);
-			transaction.commit();
-		} catch (Exception e) {
-			if (transaction != null) {
-				transaction.rollback(); // Rollback in case of an error
-			}
-			e.printStackTrace();
-		} finally {
-			session.close(); // Always close the session
-		}
-
+		tournament.setEstimatedDuration(calculateEstimatedDuration(tournament));
+		session.save(tournament);
 	}
 
 	@Override
 	public void update(Tournament tournament) throws Exception {
 		Tournament oldTournament = readById(tournament.getId());
-		Transaction transaction = null;
 
 		Session session = getCurrentSession();
-
-//		oldTournament.set
-
-		try {
-			transaction = session.beginTransaction();
-			session.update(oldTournament);
-			transaction.commit();
-		} catch (Exception e) {
-			if (transaction != null) {
-				transaction.rollback(); // Rollback in case of an error
-			}
-			e.printStackTrace();
-		} finally {
-			session.close(); // Always close the session
-		}
-
+		session.update(oldTournament);
 	}
 
 	@Override
-	public void delete(long id) {
+	public void delete(long id) throws Exception {
 		Tournament tournament = readById(id);
-		Transaction transaction = null;
-
 		Session session = getCurrentSession();
-
-		try {
-			transaction = session.beginTransaction();
-			session.delete(tournament);
-			transaction.commit();
-		} catch (Exception e) {
-			if (transaction != null) {
-				transaction.rollback(); // Rollback in case of an error
-			}
-			e.printStackTrace();
-		} finally {
-			session.close(); // Always close the session
-		}
-
+		session.delete(tournament);
 	}
 
 	@Override
-	public void addOrRemoveTeam(long TournamentId, long teamId) {
-		Tournament tournament = readById(teamId);
+	public void addOrRemoveTeam(long TournamentId, long teamId) throws Exception {
+		Tournament tournament = readById(TournamentId);
 		Team team = teamDao.readById(teamId);
 
-		// Check if player is already in this team
-		if (team.getTournaments() != null && team.getTournaments().getId() == teamId) {
-			// Player is in the team - remove them
-			player.setTeam(null);
-			team.getPlayers().remove(player);
-		} else {
-			// If player is in another team, remove from that team first
-			if (player.getTeam() != null) {
-				player.getTeam().getPlayers().remove(player);
-			}
+		Optional<Team> teamOptional = tournament.getTeams().stream().filter((t) -> t.getId() == teamId).findFirst();
 
-			// Add player to new team
-			player.setTeam(team);
-			team.getPlayers().add(player);
+		if (teamOptional.isPresent()) {
+			tournament.getTeams().remove(team);
+			team.getTournaments().remove(tournament);
+		} else {
+			tournament.getTeams().add(team);
+			team.getTournaments().add(tournament);
 		}
 
-		// Save changes
-		update(team);
-		playerDao.update(player);
+		update(tournament);
+		teamDao.update(team);
 
 	}
 

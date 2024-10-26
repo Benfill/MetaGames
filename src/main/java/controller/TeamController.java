@@ -17,6 +17,10 @@ public class TeamController {
 	private int choice;
 
 	public TeamController(ITeamService teamServiceImpl, IPlayerService playerServiceImpl) {
+		if (teamServiceImpl == null)
+			throw new IllegalStateException("TeamService must not be null");
+		else if (playerServiceImpl == null)
+			throw new IllegalStateException("PlayerService must not be null");
 		this.teamService = teamServiceImpl;
 		this.playerService = playerServiceImpl;
 	}
@@ -62,7 +66,7 @@ public class TeamController {
 	}
 
 	private int index() {
-		List<Team> teams = teamService.getALl();
+		List<Team> teams = teamService.getAll();
 		TeamView.displayAllTeams(teams);
 		Console.getInput("Enter anything to Return: ");
 		return 7;
@@ -75,7 +79,7 @@ public class TeamController {
 	}
 
 	private int show() {
-		List<Team> teams = teamService.getALl();
+		List<Team> teams = teamService.getAll();
 		if (teams.isEmpty())
 			Console.displayMessage("There is no team to show");
 		else {
@@ -96,7 +100,7 @@ public class TeamController {
 	}
 
 	private void update() {
-		List<Team> teams = teamService.getALl();
+		List<Team> teams = teamService.getAll();
 		if (teams.isEmpty())
 			Console.displayMessage("there is no team to update");
 		else {
@@ -115,7 +119,7 @@ public class TeamController {
 	}
 
 	private int delete() {
-		List<Team> teams = teamService.getALl();
+		List<Team> teams = teamService.getAll();
 		if (teams.isEmpty())
 			Console.displayMessage("there is no team to delete");
 		else {
@@ -136,13 +140,13 @@ public class TeamController {
 	}
 
 	private void addRemovePlayer() {
-		List<Team> teams = teamService.getALl();
+		List<Team> teams = teamService.getAll();
 		List<Player> players = playerService.getALl();
 
 		if (teams.isEmpty())
-			Console.displayMessage("there is no team update");
+			Console.displayMessage("there is no team to update");
 		else if (players.isEmpty())
-			Console.displayMessage("there is no team to add or delete");
+			Console.displayMessage("there is no player to add or delete");
 		else {
 			int teamId = TeamView.getTeamId();
 			int playerId = PlayerView.getPlayerId();

@@ -1,6 +1,9 @@
 package console;
 
-import java.util.InputMismatchException;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.util.Scanner;
 
 import org.jboss.logging.Logger;
@@ -14,11 +17,10 @@ public class Console {
 		System.out.println(title);
 		System.out.println("==========================================");
 
-		int i;
-		for (i = 0; i < options.length; i++) {
+		for (int i = 0; i < options.length; i++) {
 			System.out.println((i + 1) + ". " + options[i]);
 		}
-		System.out.println(++i + ". Quit");
+		System.out.println((options.length + 1) + ". Quit");
 		System.out.println("==========================================");
 		System.out.print("Choose an option: ");
 	}
@@ -28,15 +30,14 @@ public class Console {
 	}
 
 	public static boolean confirmAction(String message) {
-		String input;
 		while (true) {
-			input = getInput(message + " (y/n): ");
-
+			String input = getInput(message + " (y/n): ").toLowerCase();
 			if (input.equals("y")) {
 				return true;
 			} else if (input.equals("n")) {
 				return false;
 			}
+			System.out.println("Please enter 'y' or 'n'");
 		}
 	}
 
@@ -48,91 +49,99 @@ public class Console {
 
 	public static String getInput(String prompt) {
 		System.out.print(prompt);
-		if (scanner.hasNextLine()) {
-			scanner.nextLine(); // Consume the leftover newline
+		return scanner.nextLine().trim();
+	}
+
+	public static LocalDateTime parseToLocalDateTime(String startDate) {
+		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+		LocalDate localDate = LocalDate.parse(startDate, formatter);
+		return localDate.atStartOfDay();
+	}
+
+	public static LocalDateTime getValidatedLocalDateTime(String prompt) {
+		while (true) {
+			String dateInput = getInput(prompt + "(yyyy-MM-dd): ");
+			try {
+				return parseToLocalDateTime(dateInput);
+			} catch (DateTimeParseException e) {
+				System.out.println("Invalid date format. Please enter the date in 'yyyy-MM-dd' format.");
+			}
 		}
-		return scanner.next();
+	}
+
+	public static LocalDateTime getOptionalLocalDateTime(String prompt) {
+		while (true) {
+			String dateInput = getOptionalInput(prompt + "(yyyy-MM-dd)");
+			if (dateInput == null) {
+				return null;
+			}
+			try {
+				return parseToLocalDateTime(dateInput);
+			} catch (DateTimeParseException e) {
+				System.out.println("Invalid date format. Please enter the date in 'yyyy-MM-dd' format.");
+			}
+		}
 	}
 
 	public static String getOptionalInput(String prompt) {
-		// Consume any leftover newline from previous input
-		if (scanner.hasNextLine()) {
-			scanner.nextLine();
-		}
-
 		System.out.print(prompt + " (press Enter to skip): ");
-		String input = scanner.nextLine(); // Directly read input without checking for leftovers
-		return input.isEmpty() ? null : input; // Returns null if the input is empty
+		String input = scanner.nextLine().trim();
+		return input.isEmpty() ? null : input;
 	}
 
 	public static int getOptionalIntInput(String prompt) {
-		// Consume any leftover newline from previous input
-		if (scanner.hasNextLine()) {
-			scanner.nextLine();
-		}
+		while (true) {
+			System.out.print(prompt + " (press Enter to skip): ");
+			String input = scanner.nextLine().trim();
 
-		System.out.print(prompt + " (press Enter to skip): ");
-		String input = scanner.nextLine();
+			if (input.isEmpty()) {
+				return 0;
+			}
 
-		if (input.isEmpty()) {
-			return 0; // Returns 0 if the input is empty
-		}
-
-		try {
-			return Integer.parseInt(input); // Returns the integer if input is valid
-		} catch (NumberFormatException e) {
-			System.out.println("Invalid input. Please enter a valid integer.");
-			return getOptionalIntInput(prompt); // Recursively prompts again
+			try {
+				return Integer.parseInt(input);
+			} catch (NumberFormatException e) {
+				System.out.println("Invalid input. Please enter a valid integer.");
+			}
 		}
 	}
 
 	public static int getValidIntInput(String prompt, String errorMessage) {
-		System.out.print(prompt);
 		while (true) {
 			try {
-				return scanner.nextInt();
-			} catch (InputMismatchException e) {
-				scanner.nextLine(); // Clear the invalid input
+				String input = getInput(prompt);
+				return Integer.parseInt(input);
+			} catch (NumberFormatException e) {
 				System.out.println(errorMessage);
 			}
 		}
 	}
 
 	public static double getValidDoubleInput(String prompt) {
-		// Consume any leftover newline from previous input
-		if (scanner.hasNextLine()) {
-			scanner.nextLine();
-		}
-
-		System.out.print(prompt + ": ");
-		String input = scanner.nextLine();
-
-		try {
-			return Double.parseDouble(input); // Returns the double if input is valid
-		} catch (NumberFormatException e) {
-			System.out.println("Invalid input. Please enter a valid double.");
-			return getValidDoubleInput(prompt); // Recursively prompts again
+		while (true) {
+			try {
+				String input = getInput(prompt + ": ");
+				return Double.parseDouble(input);
+			} catch (NumberFormatException e) {
+				System.out.println("Invalid input. Please enter a valid double.");
+			}
 		}
 	}
 
 	public static double getOptionalDoubleInput(String prompt) {
-		// Consume any leftover newline from previous input
-		if (scanner.hasNextLine()) {
-			scanner.nextLine();
-		}
+		while (true) {
+			System.out.print(prompt + " (press Enter to skip): ");
+			String input = scanner.nextLine().trim();
 
-		System.out.print(prompt + " (press Enter to skip): ");
-		String input = scanner.nextLine();
+			if (input.isEmpty()) {
+				return 0.0;
+			}
 
-		if (input.isEmpty()) {
-			return 0.0; // Returns 0.0 if the input is empty
-		}
-
-		try {
-			return Double.parseDouble(input); // Returns the double if input is valid
-		} catch (NumberFormatException e) {
-			System.out.println("Invalid input. Please enter a valid double.");
-			return getOptionalDoubleInput(prompt); // Recursively prompts again
+			try {
+				return Double.parseDouble(input);
+			} catch (NumberFormatException e) {
+				System.out.println("Invalid input. Please enter a valid double.");
+			}
 		}
 	}
 
